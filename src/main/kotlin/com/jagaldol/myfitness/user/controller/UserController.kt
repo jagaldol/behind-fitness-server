@@ -8,6 +8,9 @@ class UserController {
 
     @GetMapping("/users")
     fun getUsers(): String {
+
+        val myFunc: () -> String = { "hello World" }
+
         return "hello World"
     }
 }
