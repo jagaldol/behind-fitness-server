@@ -16,7 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig(val jwtAuthenticationFilter: JwtAuthenticationFilter) {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
@@ -26,17 +26,17 @@ class SecurityConfig {
     fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
 
         httpSecurity
-                .csrf { it.disable() }
-                .headers { it.frameOptions { options -> options.sameOrigin() } }
-                .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-                .formLogin { it.disable() }
-                .httpBasic { it.disable() }
-                .addFilterBefore(JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
-                .authorizeHttpRequests {
-                    it
-                            .requestMatchers(AntPathRequestMatcher("/users/**")).hasRole("USER")
-                            .anyRequest().permitAll()
-                }
+            .csrf { it.disable() }
+            .headers { it.frameOptions { options -> options.sameOrigin() } }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .formLogin { it.disable() }
+            .httpBasic { it.disable() }
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .authorizeHttpRequests {
+                it
+                    .requestMatchers(AntPathRequestMatcher("/users/**")).hasRole("USER")
+                    .anyRequest().permitAll()
+            }
 
 
         return httpSecurity.build()

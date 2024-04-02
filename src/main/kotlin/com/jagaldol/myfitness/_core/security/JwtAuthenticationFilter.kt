@@ -7,17 +7,20 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 private val log = KotlinLogging.logger {}
 
-class JwtAuthenticationFilter : OncePerRequestFilter() {
+@Component
+class JwtAuthenticationFilter(val jwtProvider: JwtProvider) : OncePerRequestFilter() {
+
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
-        val jwt = request.getHeader(JwtProvider.HEADER)
-        
+        val jwt = request.getHeader(jwtProvider.header)
+
         jwt?.let {
             try {
-                val decodedJWT = JwtProvider.verify(jwt, JwtProvider.TYPE_ACCESS)
+                val decodedJWT = jwtProvider.verify(jwt, jwtProvider.typeAccess)
                 val id = decodedJWT.subject.toLong()
 
                 val userDetails = CustomUserDetails(userId = id)
