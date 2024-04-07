@@ -3,10 +3,13 @@ package com.jagaldol.myfitness._core.security
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.DecodedJWT
+import com.jagaldol.myfitness._core.errors.exception.CustomException
+import com.jagaldol.myfitness._core.errors.exception.ErrorCode
 import com.jagaldol.myfitness.user.User
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
+import java.time.ZoneId
 
 @Component
 class JwtProvider(
@@ -35,7 +38,7 @@ class JwtProvider(
             .verify(jwt)
 
         if (decodedJWT.getClaim("type").asString() != type) {
-            throw RuntimeException("토큰 검증 실패")
+            throw CustomException(ErrorCode.INVALID_TOKEN)
         }
         return decodedJWT
     }
@@ -44,7 +47,9 @@ class JwtProvider(
         val now = LocalDateTime.now()
         val expired = now.plusSeconds(exp)
         val jwt = JWT.create()
+            .withSubject(user.id.toString())
             .withClaim("type", type)
+            .withExpiresAt(expired.atZone(ZoneId.systemDefault()).toInstant())
             .sign(Algorithm.HMAC512(tokenSecret))
 
         return StringBuilder(tokenPrefix).append(jwt).toString()

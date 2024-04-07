@@ -1,5 +1,9 @@
 package com.jagaldol.myfitness._core.security
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.jagaldol.myfitness._core.config.CORSConfig
+import com.jagaldol.myfitness._core.errors.exception.CustomException
+import com.jagaldol.myfitness._core.errors.exception.ErrorCode
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -16,13 +20,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(val jwtAuthenticationFilter: JwtAuthenticationFilter) {
+class SecurityConfig(val jwtAuthenticationFilter: JwtAuthenticationFilter, val corsConfig: CORSConfig) {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
 
     @Bean
-    @Throws(Exception::class)
     fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
 
         httpSecurity
@@ -32,11 +35,31 @@ class SecurityConfig(val jwtAuthenticationFilter: JwtAuthenticationFilter) {
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .exceptionHandling {
+                it.authenticationEntryPoint { _, response, _ ->
+                    response.run {
+                        val e = CustomException(ErrorCode.UNAUTHORIZED)
+                        status = e.status()
+                        contentType = "application/json; charset=utf-8"
+                        writer.println(ObjectMapper().writeValueAsString(e.body()))
+                    }
+                }
+                it.accessDeniedHandler { _, response, _ ->
+                    response.run {
+                        val e = CustomException(ErrorCode.PERMISSION_DENIED)
+                        status = e.status()
+                        contentType = "application/json; charset=utf-8"
+                        writer.println(ObjectMapper().writeValueAsString(e.body()))
+                    }
+                }
+            }
             .authorizeHttpRequests {
                 it
                     .requestMatchers(AntPathRequestMatcher("/users/**")).hasRole("USER")
                     .anyRequest().permitAll()
             }
+
+
 
 
         return httpSecurity.build()
@@ -46,12 +69,12 @@ class SecurityConfig(val jwtAuthenticationFilter: JwtAuthenticationFilter) {
         val configuration = CorsConfiguration().apply {
             addAllowedHeader("*")
             addAllowedMethod("*") // GET, POST, PUT, DELETE
-
+            allowedOrigins = corsConfig.CORS
+            allowCredentials = true
             addExposedHeader("Authorization")
         }
-        val source = UrlBasedCorsConfigurationSource().apply {
+        return UrlBasedCorsConfigurationSource().apply {
             registerCorsConfiguration("/**", configuration)
         }
-        return source
     }
 }
