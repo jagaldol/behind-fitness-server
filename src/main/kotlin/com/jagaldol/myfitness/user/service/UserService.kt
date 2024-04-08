@@ -48,4 +48,8 @@ class UserService(
         )
         return Pair<String, String>(jwtProvider.addPrefix(access), refresh)
     }
+
+    fun logout(userId: Long) {
+        redisTemplate.delete(userId.toString())
+    }
 }
