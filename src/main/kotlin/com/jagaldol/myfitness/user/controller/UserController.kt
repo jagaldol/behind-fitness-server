@@ -1,16 +1,43 @@
 package com.jagaldol.myfitness.user.controller
 
-import org.springframework.web.bind.annotation.GetMapping
+import com.jagaldol.myfitness._core.security.JwtProvider
+import com.jagaldol.myfitness._core.utils.ApiUtils
+import com.jagaldol.myfitness.user.dto.UserRequest
+import com.jagaldol.myfitness.user.service.UserService
+import io.github.oshai.kotlinlogging.KotlinLogging
+import jakarta.validation.Valid
+import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseCookie
+import org.springframework.http.ResponseEntity
+import org.springframework.validation.Errors
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
+private val log = KotlinLogging.logger {}
+
 @RestController
-class UserController {
+class UserController(
+    private val userService: UserService,
+    private val jwtProvider: JwtProvider
+) {
 
-    @GetMapping("/users")
-    fun getUsers(): String {
 
-        val myFunc: () -> String = { "hello World" }
+    @PostMapping("/login")
+    fun login(@RequestBody @Valid requestDto: UserRequest.LoginDto, errors: Errors): ResponseEntity<ApiUtils.Response<Any?>> {
+        val (access, refresh) = userService.login(requestDto)
 
-        return "hello World"
+        return ResponseEntity.ok().header(jwtProvider.header, access)
+            .header(HttpHeaders.SET_COOKIE, createRefreshTokenCookie(refresh).toString())
+            .body(ApiUtils.success())
+
     }
+
+    private fun createRefreshTokenCookie(refreshToken: String) =
+        ResponseCookie.from("refreshToken", refreshToken)
+            .httpOnly(true) // javascript 접근 방지
+            .secure(true) // https 통신 강제
+            .sameSite("None")
+            .maxAge(jwtProvider.refreshExp)
+            .build()
 }

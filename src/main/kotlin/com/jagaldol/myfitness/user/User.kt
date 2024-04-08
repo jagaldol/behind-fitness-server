@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 class User(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
-    @Column(length = 20, nullable = false, unique = true)
+    @Column(length = 20, nullable = false)
     var name: String,
     @Column(length = 100, nullable = false, unique = true)
     var email: String,

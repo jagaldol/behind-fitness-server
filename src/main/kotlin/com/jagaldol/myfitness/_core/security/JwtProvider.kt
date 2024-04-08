@@ -14,16 +14,20 @@ import java.time.ZoneId
 @Component
 class JwtProvider(
     @Value("\${private.token_exp.access}")
-    private var accessExp: Long,
+    val accessExp: Long,
     @Value("\${private.token_exp.refresh}")
-    private var refreshExp: Long,
+    val refreshExp: Long,
     @Value("\${private.secret}")
-    private var tokenSecret: String,
+    private val tokenSecret: String,
 ) {
     val tokenPrefix = "Bearer "
     val header = "Authorization"
     val typeAccess = "access"
     val typeRefresh = "refresh"
+
+    fun addPrefix(token: String) = "$tokenPrefix$token"
+
+    fun removePrefix(token: String) = token.replace(tokenPrefix, "")
 
     fun createAccess(user: User): String {
         return create(user, accessExp, typeAccess)
@@ -46,13 +50,12 @@ class JwtProvider(
     private fun create(user: User, exp: Long, type: String): String {
         val now = LocalDateTime.now()
         val expired = now.plusSeconds(exp)
-        val jwt = JWT.create()
+
+        return JWT.create()
             .withSubject(user.id.toString())
             .withClaim("type", type)
             .withExpiresAt(expired.atZone(ZoneId.systemDefault()).toInstant())
             .sign(Algorithm.HMAC512(tokenSecret))
-
-        return StringBuilder(tokenPrefix).append(jwt).toString()
     }
 
 }

@@ -20,7 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(val jwtAuthenticationFilter: JwtAuthenticationFilter, val corsConfig: CORSConfig) {
+class SecurityConfig(private val jwtAuthenticationFilter: JwtAuthenticationFilter, private val corsConfig: CORSConfig) {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()

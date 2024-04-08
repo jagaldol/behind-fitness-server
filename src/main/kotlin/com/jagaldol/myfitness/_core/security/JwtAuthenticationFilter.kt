@@ -13,14 +13,14 @@ import org.springframework.web.filter.OncePerRequestFilter
 private val log = KotlinLogging.logger {}
 
 @Component
-class JwtAuthenticationFilter(val jwtProvider: JwtProvider) : OncePerRequestFilter() {
+class JwtAuthenticationFilter(private val jwtProvider: JwtProvider) : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         val jwt = request.getHeader(jwtProvider.header)
 
         jwt?.let {
             try {
-                val decodedJWT = jwtProvider.verify(jwt, jwtProvider.typeAccess)
+                val decodedJWT = jwtProvider.verify(jwtProvider.removePrefix(jwt), jwtProvider.typeAccess)
                 val id = decodedJWT.subject.toLong()
 
                 val userDetails = CustomUserDetails(userId = id)
