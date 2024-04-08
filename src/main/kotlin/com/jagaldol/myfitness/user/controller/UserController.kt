@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.Errors
+import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -31,6 +32,15 @@ class UserController(
             .header(HttpHeaders.SET_COOKIE, createRefreshTokenCookie(refresh).toString())
             .body(ApiUtils.success())
 
+    }
+
+    @PostMapping("/authentication")
+    fun reIssueTokens(@CookieValue("refreshToken") refreshToken: String): ResponseEntity<ApiUtils.Response<Any?>> {
+        val (access, refresh) = userService.reIssueTokens(refreshToken)
+
+        return ResponseEntity.ok().header(jwtProvider.header, access)
+            .header(HttpHeaders.SET_COOKIE, createRefreshTokenCookie(refresh).toString())
+            .body(ApiUtils.success())
     }
 
     private fun createRefreshTokenCookie(refreshToken: String) =

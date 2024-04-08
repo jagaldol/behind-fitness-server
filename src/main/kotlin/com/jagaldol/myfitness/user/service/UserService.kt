@@ -7,6 +7,7 @@ import com.jagaldol.myfitness.user.User
 import com.jagaldol.myfitness.user.dto.UserRequest
 import com.jagaldol.myfitness.user.repository.UserRepository
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.concurrent.TimeUnit
@@ -22,6 +23,16 @@ class UserService(
     fun login(requestDto: UserRequest.LoginDto): Pair<String, String> {
         val user = userRepository.findByEmail(requestDto.email) ?: throw CustomException(ErrorCode.LOGIN_FAILED)
         if (!passwordEncoder.matches(requestDto.password, user.password)) throw CustomException(ErrorCode.LOGIN_FAILED)
+
+        return issueTokens(user)
+    }
+
+    fun reIssueTokens(refreshToken: String): Pair<String, String> {
+        val decodedRefreshToken = jwtProvider.verify(refreshToken, jwtProvider.typeRefresh)
+
+        if (redisTemplate.opsForValue().get(decodedRefreshToken.subject) != refreshToken) throw CustomException(ErrorCode.INVALID_TOKEN)
+
+        val user = userRepository.findByIdOrNull(decodedRefreshToken.subject.toLong()) ?: throw CustomException(ErrorCode.NOT_FOUND_USER)
 
         return issueTokens(user)
     }
