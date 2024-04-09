@@ -34,6 +34,7 @@ class SecurityConfig(private val jwtAuthenticationFilter: JwtAuthenticationFilte
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
+            .logout { it.disable() }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {
                 it.authenticationEntryPoint { _, response, _ ->
@@ -55,7 +56,7 @@ class SecurityConfig(private val jwtAuthenticationFilter: JwtAuthenticationFilte
             }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers(AntPathRequestMatcher("/users/**")).hasRole("USER")
+                    .requestMatchers(AntPathRequestMatcher("/logout")).hasRole("USER")
                     .anyRequest().permitAll()
             }
 

@@ -46,8 +46,11 @@ class UserController(
     }
 
     @PostMapping("/logout")
-    fun logout(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<ApiUtils.Response<Any?>> {
-        userService.logout(userDetails.userId)
+    fun logout(
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+        @CookieValue("refreshToken") refreshToken: String?
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        userService.logout(userDetails.userId, refreshToken)
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, createRefreshTokenCookie("", 0).toString())
             .body(ApiUtils.success())
     }
