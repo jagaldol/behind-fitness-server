@@ -6,6 +6,7 @@ import com.jagaldol.myfitness._core.utils.ApiUtils
 import com.jagaldol.myfitness.user.dto.UserRequest
 import com.jagaldol.myfitness.user.service.UserService
 import io.github.oshai.kotlinlogging.KotlinLogging
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseCookie
@@ -27,8 +28,12 @@ class UserController(
 
 
     @PostMapping("/login")
-    fun login(@RequestBody @Valid requestDto: UserRequest.LoginDto, errors: Errors): ResponseEntity<ApiUtils.Response<Any?>> {
-        val (access, refresh) = userService.login(requestDto)
+    fun login(
+        request: HttpServletRequest,
+        @RequestBody @Valid requestDto: UserRequest.LoginDto,
+        errors: Errors
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        val (access, refresh) = userService.login(requestDto, getIp(request))
 
         return ResponseEntity.ok().header(jwtProvider.header, access)
             .header(HttpHeaders.SET_COOKIE, createRefreshTokenCookie(refresh, jwtProvider.refreshExp).toString())
@@ -37,8 +42,11 @@ class UserController(
     }
 
     @PostMapping("/authentication")
-    fun reIssueTokens(@CookieValue("refreshToken") refreshToken: String): ResponseEntity<ApiUtils.Response<Any?>> {
-        val (access, refresh) = userService.reIssueTokens(refreshToken)
+    fun reIssueTokens(
+        request: HttpServletRequest,
+        @CookieValue("refreshToken") refreshToken: String
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        val (access, refresh) = userService.reIssueTokens(refreshToken, getIp(request))
 
         return ResponseEntity.ok().header(jwtProvider.header, access)
             .header(HttpHeaders.SET_COOKIE, createRefreshTokenCookie(refresh, jwtProvider.refreshExp).toString())
@@ -63,5 +71,11 @@ class UserController(
             .sameSite("None")
             .maxAge(exp)
             .build()
+
+    private fun getIp(request: HttpServletRequest) =
+        request.run {
+            getHeader("X-Forwarded-For") ?: getHeader("Proxy-Client-IP") ?: getHeader("WL-Proxy-Client-IP") ?: getHeader("HTTP_CLIENT_IP")
+            ?: getHeader("HTTP_X_FORWARDED_FOR") ?: remoteAddr
+        }
 }
 
