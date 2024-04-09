@@ -7,11 +7,13 @@ import com.jagaldol.myfitness.user.TokenInfo
 import com.jagaldol.myfitness.user.User
 import com.jagaldol.myfitness.user.dto.UserRequest
 import com.jagaldol.myfitness.user.repository.UserRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
 
 @Service
@@ -19,7 +21,9 @@ class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtProvider: JwtProvider,
-    private val redisTemplate: RedisTemplate<String, Any>
+    private val redisTemplate: RedisTemplate<String, Any>,
+    @Value("\${private.multi-token-limit}")
+    private val tokenLimit: Int
 ) {
     fun login(requestDto: UserRequest.LoginDto, ip: String): Pair<String, String> {
         val user = userRepository.findByEmail(requestDto.email) ?: throw CustomException(ErrorCode.LOGIN_FAILED)
@@ -44,13 +48,21 @@ class UserService(
         val refresh = jwtProvider.createRefresh(user)
 
         prevToken?.let { redisTemplate.opsForHash<String, TokenInfo>().delete(user.id.toString(), prevToken) }
-        // TODO: 이전 토큰 없는 경우 개수 검사해서 최대 5개 남기기
-        // TODO: 만료된 토큰 삭제하기
-        redisTemplate.opsForHash<String, TokenInfo>().put(
-            user.id.toString(),
-            refresh,
-            TokenInfo(ip, LocalDateTime.now())
-        )
+        val hashOperations = redisTemplate.boundHashOps<String, TokenInfo>(user.id.toString())
+        val size = hashOperations.size()?.toInt() ?: 0
+
+        if (size >= tokenLimit) {
+            hashOperations.entries()
+                ?.toList()
+                ?.sortedBy { it.second.date }
+                ?.subList(0, size - tokenLimit + 1)
+                ?.forEach {
+                    hashOperations.delete(it.first)
+                }
+        }
+
+        hashOperations.put(refresh, TokenInfo(ip, LocalDateTime.now()))
+        hashOperations.expire(jwtProvider.refreshExp, TimeUnit.SECONDS)
         return jwtProvider.addPrefix(access) to refresh
     }
 
