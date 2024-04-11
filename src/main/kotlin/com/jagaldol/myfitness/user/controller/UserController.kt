@@ -12,11 +12,7 @@ import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.Errors
-import org.springframework.web.bind.annotation.CookieValue
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -74,5 +70,9 @@ class UserController(
             getHeader("X-Forwarded-For") ?: getHeader("Proxy-Client-IP") ?: getHeader("WL-Proxy-Client-IP") ?: getHeader("HTTP_CLIENT_IP")
             ?: getHeader("HTTP_X_FORWARDED_FOR") ?: remoteAddr
         }
+
+    @GetMapping("/users/mine")
+    fun getMyInfo(@AuthenticationPrincipal userDetails: CustomUserDetails) =
+        ResponseEntity.ok().body(ApiUtils.success(userService.getMyInfo(userDetails.userId)))
 }
 

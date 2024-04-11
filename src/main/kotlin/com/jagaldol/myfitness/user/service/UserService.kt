@@ -6,6 +6,7 @@ import com.jagaldol.myfitness._core.security.JwtProvider
 import com.jagaldol.myfitness.user.TokenInfo
 import com.jagaldol.myfitness.user.User
 import com.jagaldol.myfitness.user.dto.UserRequest
+import com.jagaldol.myfitness.user.dto.UserResponse
 import com.jagaldol.myfitness.user.repository.UserRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.RedisTemplate
@@ -69,4 +70,7 @@ class UserService(
     fun logout(userId: Long, refreshToken: String?) {
         refreshToken?.let { redisTemplate.opsForHash<String, TokenInfo>().delete(userId.toString(), refreshToken) }
     }
+
+    fun getMyInfo(userId: Long) =
+        UserResponse.GetMyInfoDto(userRepository.findByIdOrNull(userId) ?: throw CustomException(ErrorCode.NOT_FOUND_USER))
 }
