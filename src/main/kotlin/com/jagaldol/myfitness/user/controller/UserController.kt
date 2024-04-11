@@ -5,7 +5,6 @@ import com.jagaldol.myfitness._core.security.JwtProvider
 import com.jagaldol.myfitness._core.utils.ApiUtils
 import com.jagaldol.myfitness.user.dto.UserRequest
 import com.jagaldol.myfitness.user.service.UserService
-import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
@@ -14,19 +13,17 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.CookieValue
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
-private val log = KotlinLogging.logger {}
 
 @RestController
 class UserController(
     private val userService: UserService,
     private val jwtProvider: JwtProvider
 ) {
-
-
     @PostMapping("/login")
     fun login(
         request: HttpServletRequest,

@@ -18,6 +18,8 @@ class User(
     var email: String,
     @Column(length = 100, nullable = false)
     var password: String,
+    @Column(length = 100)
+    var memo: String,
     @ColumnDefault("now()")
     val createdAt: LocalDateTime = LocalDateTime.now()
 )

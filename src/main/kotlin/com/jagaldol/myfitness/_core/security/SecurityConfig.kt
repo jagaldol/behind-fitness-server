@@ -56,12 +56,12 @@ class SecurityConfig(private val jwtAuthenticationFilter: JwtAuthenticationFilte
             }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers(AntPathRequestMatcher("/logout")).hasRole("USER")
-                    .anyRequest().permitAll()
+                    .requestMatchers(
+                        AntPathRequestMatcher("/login", "POST"),
+                        AntPathRequestMatcher("/authentication", "POST")
+                    ).permitAll()
+                    .anyRequest().authenticated()
             }
-
-
-
 
         return httpSecurity.build()
     }
