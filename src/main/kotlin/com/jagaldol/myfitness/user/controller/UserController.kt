@@ -74,5 +74,15 @@ class UserController(
     @GetMapping("/users/mine")
     fun getMyInfo(@AuthenticationPrincipal userDetails: CustomUserDetails) =
         ResponseEntity.ok().body(ApiUtils.success(userService.getMyInfo(userDetails.userId)))
+
+    @PutMapping("users/mine")
+    fun editMyInfo(
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+        @RequestBody @Valid requestDto: UserRequest.UpdateMyInfoDto, errors: Errors
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        userService.updateMyInfo(userDetails.userId, requestDto)
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, createRefreshTokenCookie("", 0).toString())
+            .body(ApiUtils.success())
+    }
 }
 

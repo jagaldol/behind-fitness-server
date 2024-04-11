@@ -13,10 +13,12 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 
 
+@Transactional(readOnly = true)
 @Service
 class UserService(
     private val userRepository: UserRepository,
@@ -73,4 +75,14 @@ class UserService(
 
     fun getMyInfo(userId: Long) =
         UserResponse.GetMyInfoDto(userRepository.findByIdOrNull(userId) ?: throw CustomException(ErrorCode.NOT_FOUND_USER))
+
+    @Transactional
+    fun updateMyInfo(userId: Long, requestDto: UserRequest.UpdateMyInfoDto) {
+        val user = userRepository.findByIdOrNull(userId) ?: throw CustomException(ErrorCode.NOT_FOUND_USER)
+        with(requestDto) {
+            name?.let { user.name = it }
+            password?.let { user.password = passwordEncoder.encode(it) }
+            memo?.let { user.memo = it }
+        }
+    }
 }
