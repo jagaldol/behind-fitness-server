@@ -27,7 +27,7 @@ class UserService(
     private val tokenLimit: Int
 ) {
     fun login(requestDto: UserRequest.LoginDto, ip: String): Pair<String, String> {
-        val user = userRepository.findByEmail(requestDto.email) ?: throw CustomException(ErrorCode.LOGIN_FAILED)
+        val user = userRepository.findByEmail(requestDto.email!!) ?: throw CustomException(ErrorCode.LOGIN_FAILED)
         if (!passwordEncoder.matches(requestDto.password, user.password)) throw CustomException(ErrorCode.LOGIN_FAILED)
         return issueTokens(user, ip)
     }
