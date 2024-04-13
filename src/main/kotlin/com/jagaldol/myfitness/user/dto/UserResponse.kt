@@ -9,6 +9,6 @@ class UserResponse {
         val email: String,
         val memo: String?
     ) {
-        constructor(user: User) : this(user.id, user.name, user.email, user.memo)
+        constructor(user: User) : this(user.id!!, user.name, user.email, user.memo)
     }
 }
