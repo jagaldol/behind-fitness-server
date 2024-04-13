@@ -26,4 +26,15 @@ class SportController(
     fun get(
         @AuthenticationPrincipal userDetails: CustomUserDetails
     ) = ResponseEntity.ok().body(ApiUtils.success(sportService.get(userDetails.userId)))
+
+    @PutMapping("/{sportId}")
+    fun update(
+        @PathVariable sportId: Long,
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+        @RequestBody @Valid requestDto: SportRequest.UpdateDto,
+        errors: Errors,
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        sportService.update(sportId, userDetails.userId, requestDto)
+        return ResponseEntity.ok().body(ApiUtils.success())
+    }
 }

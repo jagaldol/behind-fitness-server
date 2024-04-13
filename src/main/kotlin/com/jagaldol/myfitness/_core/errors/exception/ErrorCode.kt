@@ -11,7 +11,7 @@ enum class ErrorCode(
     PERMISSION_DENIED(HttpStatus.FORBIDDEN, "권한이 없습니다."),
 
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
-
+    NOT_FOUND_DATA(HttpStatus.NOT_FOUND, "존재하지 않는 데이터에 대한 접근입니다"),
 
     LOGIN_FAILED(HttpStatus.BAD_REQUEST, "로그인에 실패하였습니다."),
     INVALID_REQUEST_DATA(HttpStatus.BAD_REQUEST, "올바른 양식이 아닙니다."),

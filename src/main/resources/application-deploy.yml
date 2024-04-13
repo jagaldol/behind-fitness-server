@@ -50,7 +50,7 @@ logging:
 # jwt token config
 private:
   token_exp:
-    access: 172800
+    access: 600
     refresh: 2592000
   secret: fitness
   multi-token-limit: 5
