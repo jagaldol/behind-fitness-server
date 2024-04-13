@@ -5,6 +5,7 @@ import com.jagaldol.myfitness._core.errors.exception.ErrorCode
 import com.jagaldol.myfitness._core.utils.CreateResponseDto
 import com.jagaldol.myfitness.sport.Sport
 import com.jagaldol.myfitness.sport.dto.SportRequest
+import com.jagaldol.myfitness.sport.dto.SportResponse
 import com.jagaldol.myfitness.sport.repository.SportRepository
 import com.jagaldol.myfitness.user.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -26,4 +27,6 @@ class SportService(
                 ?: throw CustomException(ErrorCode.SERVER_ERROR)
         )
     }
+
+    fun get(userId: Long) = SportResponse.GetDto.of(sportRepository.findAllByUserId(userId))
 }
