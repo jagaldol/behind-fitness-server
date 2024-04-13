@@ -37,4 +37,13 @@ class SportController(
         sportService.update(sportId, userDetails.userId, requestDto)
         return ResponseEntity.ok().body(ApiUtils.success())
     }
+
+    @DeleteMapping("/{sportId}")
+    fun delete(
+        @PathVariable sportId: Long,
+        @AuthenticationPrincipal userDetails: CustomUserDetails
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        sportService.delete(sportId, userDetails.userId)
+        return ResponseEntity.ok().body(ApiUtils.success())
+    }
 }

@@ -33,9 +33,16 @@ class SportService(
     @Transactional
     fun update(sportId: Long, userId: Long, requestDto: SportRequest.UpdateDto) {
         val sport = sportRepository.findByIdOrNull(sportId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
-
         if (sport.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
 
         requestDto.name?.let { sport.name = it }
+    }
+
+    @Transactional
+    fun delete(sportId: Long, userId: Long) {
+        val sport = sportRepository.findByIdOrNull(sportId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+        if (sport.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+        sportRepository.delete(sport)
     }
 }
