@@ -9,8 +9,8 @@ plugins {
     kotlin("plugin.jpa") version "1.9.23"
 }
 
-group = "com.jagaldol"
-version = "0.0.1-SNAPSHOT"
+group = "com.jagaldol.behind"
+version = "1.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17

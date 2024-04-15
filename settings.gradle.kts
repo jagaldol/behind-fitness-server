@@ -1,1 +1,1 @@
-rootProject.name = "my-fitness"
+`rootProject`.name = "behind-fitness"
