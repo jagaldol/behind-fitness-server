@@ -59,6 +59,7 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it
                     .requestMatchers(
+                        AntPathRequestMatcher("/h2-console/**"),
                         AntPathRequestMatcher("/login", "POST"),
                         AntPathRequestMatcher("/authentication", "POST")
                     ).permitAll()
