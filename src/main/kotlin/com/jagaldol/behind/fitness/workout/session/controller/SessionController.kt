@@ -40,4 +40,13 @@ class SessionController(
         @RequestParam(value = "page", required = false, defaultValue = "1") page: Int?,
         @RequestParam(value = "date", required = false) date: LocalDate?
     ) = ResponseEntity.ok().body(ApiUtils.success(sessionService.get(userDetails.userId, page!!, date)))
+
+    @DeleteMapping("/{sessionId}")
+    fun delete(
+        @PathVariable sessionId: Long,
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        sessionService.delete(sessionId, userDetails.userId)
+        return ResponseEntity.ok().body(ApiUtils.success())
+    }
 }

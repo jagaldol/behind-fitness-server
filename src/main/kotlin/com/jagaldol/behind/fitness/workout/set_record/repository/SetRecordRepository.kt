@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface SetRecordRepository : JpaRepository<SetRecord, Long> {
     fun findAllByRecordId(recordId: Long): List<SetRecord>
+
+    fun deleteByRecordId(id: Long)
 }

@@ -66,4 +66,18 @@ class SessionService(
 
         return SessionResponse.GetDto.of(sessionDtos)
     }
+
+    @Transactional
+    fun delete(sessionId: Long, userId: Long) {
+        val session = sessionRepository.findByIdOrNull(sessionId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+        if (session.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+        val records = recordRepository.findBySessionId(session.id!!)
+
+        val recordDtos = records.forEach {
+            setRecordRepository.deleteByRecordId(it.id!!)
+            recordRepository.delete(it)
+        }
+        sessionRepository.delete(session)
+    }
 }
