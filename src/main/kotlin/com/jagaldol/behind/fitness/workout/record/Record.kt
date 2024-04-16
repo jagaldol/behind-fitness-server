@@ -1,24 +1,22 @@
-package com.jagaldol.behind.fitness.workout.session
+package com.jagaldol.behind.fitness.workout.record
 
-import com.jagaldol.behind.fitness.user.User
+import com.jagaldol.behind.fitness.sport.Sport
+import com.jagaldol.behind.fitness.workout.session.Session
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.DynamicInsert
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @Entity
 @DynamicInsert
-@Table(name = "workout_session_tb")
-class Session(
+@Table(name = "workout_record_tb")
+class Record(
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    val user: User,
-    @Column(nullable = false)
-    var date: LocalDate,
-    var startTime: LocalTime? = null,
-    var endTime: LocalTime? = null,
+    @JoinColumn(name = "workout_session_id")
+    val session: Session,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sport_id")
+    val sport: Sport,
     @ColumnDefault("now()")
     val createdAt: LocalDateTime = LocalDateTime.now(),
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
