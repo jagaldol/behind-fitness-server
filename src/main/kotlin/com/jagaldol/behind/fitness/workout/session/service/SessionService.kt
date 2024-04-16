@@ -24,4 +24,16 @@ class SessionService(
 
         return CreateResponseDto(sessionRepository.save(workoutSession).id ?: throw CustomException(ErrorCode.SERVER_ERROR))
     }
+
+    @Transactional
+    fun update(sessionId: Long, userId: Long, requestDto: SessionRequest.UpdateDto) {
+        val workoutSession = sessionRepository.findByIdOrNull(sessionId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+        if (workoutSession.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+        with(requestDto) {
+            date?.let { workoutSession.date = it }
+            startTime?.let { workoutSession.startTime = it }
+            endTime?.let { workoutSession.endTime = it }
+        }
+    }
 }

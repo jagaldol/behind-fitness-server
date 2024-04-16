@@ -11,4 +11,10 @@ class SessionRequest {
         val startTime: LocalTime?,
         val endTime: LocalTime?
     )
+
+    data class UpdateDto(
+        val date: LocalDate?,
+        val startTime: LocalTime?,
+        val endTime: LocalTime?
+    )
 }
