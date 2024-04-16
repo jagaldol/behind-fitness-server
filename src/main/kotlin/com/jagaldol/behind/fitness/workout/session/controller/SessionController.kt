@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/sessions")
@@ -32,4 +33,11 @@ class SessionController(
         sessionService.update(sessionId, userDetails.userId, requestDto)
         return ResponseEntity.ok().body(ApiUtils.success())
     }
+
+    @GetMapping
+    fun get(
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+        @RequestParam(value = "page", required = false, defaultValue = "1") page: Int?,
+        @RequestParam(value = "date", required = false) date: LocalDate?
+    ) = ResponseEntity.ok().body(ApiUtils.success(sessionService.get(userDetails.userId, page!!, date)))
 }
