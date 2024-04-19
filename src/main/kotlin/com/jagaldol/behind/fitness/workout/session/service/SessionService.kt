@@ -74,7 +74,7 @@ class SessionService(
 
         val records = recordRepository.findBySessionId(session.id!!)
 
-        val recordDtos = records.forEach {
+        records.forEach {
             setRecordRepository.deleteByRecordId(it.id!!)
             recordRepository.delete(it)
         }
