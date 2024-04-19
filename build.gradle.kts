@@ -78,6 +78,6 @@ tasks.asciidoctor {
     dependsOn(tasks.test)
 }
 
-tasks.withType<Jar> {
+tasks.jar {
     enabled = false
 }
