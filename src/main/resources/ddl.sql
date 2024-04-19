@@ -22,8 +22,8 @@ CREATE TABLE workout_session_tb
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id    BIGINT NOT NULL,
     date       DATE   NOT NULL,
-    start      TIME,
-    end        TIME,
+    start_time      TIME,
+    end_time        TIME,
     created_at TIMESTAMP DEFAULT now()
 );
 

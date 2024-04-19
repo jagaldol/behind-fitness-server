@@ -17,5 +17,4 @@ class GlobalExceptionHandler {
     @ExceptionHandler(Exception::class)
     fun unknownServerError(e: Exception) =
         ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiUtils.error(ErrorCode.UNKNOWN_SERVER_ERROR, e.message))
-            .also { e.printStackTrace() }
 }
