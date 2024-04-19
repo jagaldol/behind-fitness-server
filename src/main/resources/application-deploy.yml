@@ -3,16 +3,13 @@ server:
     encoding:
       charset: utf-8
       force: true
-  port: 8080
+  port: 8082
 spring:
   datasource:
-    url: jdbc:h2:mem:test;MODE=MySQL
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3308/bungaebowling_db?rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: create
@@ -25,11 +22,12 @@ spring:
     defer-datasource-initialization: true
   sql:
     init:
+      mode: never
       encoding: utf-8
   data:
     redis:
       host: localhost
-      port: 6379
+      port: 6380
   jackson:
     time-zone: Asia/Seoul
   servlet:
@@ -39,12 +37,7 @@ spring:
 
 logging:
   level:
-    com.jagaldol: DEBUG
-    org.hibernate:
-      SQL: DEBUG
-      orm.jdbc:
-        extract: TRACE
-        bind: TRACE
+    com.jagaldol: INFO
 
 
 # jwt token config
@@ -52,6 +45,6 @@ private:
   token_exp:
     access: 600
     refresh: 2592000
-  secret: fitness
+  secret: ${TOKEN_SECRET}
   multi-token-limit: 5
   domain: https://localhost:3000
