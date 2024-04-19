@@ -9,7 +9,7 @@ services:
       - TZ=Asia/Seoul
     env_file: .mysql.env
     volumes:
-      - /opt/mysql:/var/lib/mysql
+      - /opt/behind/fitness/mysql:/var/lib/mysql
   redis:
     image: redis:6.2
     container_name: fitness-redis
