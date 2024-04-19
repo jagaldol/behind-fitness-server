@@ -47,4 +47,4 @@ private:
     refresh: 2592000
   secret: ${TOKEN_SECRET}
   multi-token-limit: 5
-  domain: https://localhost:3000
+  domain: https://behind-fitness.jagaldol.com

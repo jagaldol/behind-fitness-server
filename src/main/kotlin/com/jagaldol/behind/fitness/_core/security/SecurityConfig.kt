@@ -1,6 +1,7 @@
 package com.jagaldol.behind.fitness._core.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.jagaldol.behind.fitness._core.config.CORSConfig
 import com.jagaldol.behind.fitness._core.errors.exception.CustomException
 import com.jagaldol.behind.fitness._core.errors.exception.ErrorCode
 import org.springframework.context.annotation.Bean
@@ -21,7 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
-    private val corsConfig: com.jagaldol.behind.fitness._core.config.CORSConfig
+    private val corsConfig: CORSConfig
 ) {
 
     @Bean
@@ -74,7 +75,7 @@ class SecurityConfig(
         val configuration = CorsConfiguration().apply {
             addAllowedHeader("*")
             addAllowedMethod("*") // GET, POST, PUT, DELETE
-            allowedOrigins = corsConfig.CORS
+            allowedOrigins = corsConfig.cors
             allowCredentials = true
             addExposedHeader("Authorization")
         }
