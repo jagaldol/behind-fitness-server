@@ -67,6 +67,20 @@ class SessionService(
         return SessionResponse.GetDto.of(sessionDtos)
     }
 
+    fun getById(userId: Long, sessionId: Long): SessionResponse.GetByIdDto {
+        val workoutSession = sessionRepository.findByIdOrNull(sessionId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+        if (workoutSession.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+        val records = recordRepository.findBySessionId(workoutSession.id!!)
+
+        val recordDtos = records.map {
+            val setRecords = setRecordRepository.findAllByRecordId(it.id!!)
+            RecordDto(it, setRecords)
+        }
+
+        return SessionResponse.GetByIdDto(SessionDto(workoutSession, recordDtos))
+    }
+
     @Transactional
     fun delete(sessionId: Long, userId: Long) {
         val session = sessionRepository.findByIdOrNull(sessionId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
