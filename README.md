@@ -1,6 +1,6 @@
 # Fitness | Behind - server
 
-Behind 프로젝트의 첫번째 운동 관리 프로그램의 백엔드 서버입니다.
+Behind 프로젝트의 첫번째, 운동 관리 프로그램의 백엔드 서버입니다.
 
 ## ERD
 
