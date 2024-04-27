@@ -43,4 +43,12 @@ class SetRecordService(
             countUnit?.let { setRecord.countUnit = it }
         }
     }
+
+    @Transactional
+    fun delete(userId: Long, setId: Long) {
+        val setRecord = setRecordRepository.findByIdOrNullFetchSession(setId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+        if (setRecord.record.session.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+        setRecordRepository.delete(setRecord)
+    }
 }

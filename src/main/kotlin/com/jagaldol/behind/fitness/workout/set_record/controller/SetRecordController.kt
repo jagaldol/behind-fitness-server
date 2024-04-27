@@ -34,4 +34,13 @@ class SetRecordController(
         setRecordService.update(userDetails.userId, setId, requestDto)
         return ResponseEntity.ok().body(ApiUtils.success())
     }
+
+    @DeleteMapping("/sets/{setId}")
+    fun delete(
+        @PathVariable setId: Long,
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        setRecordService.delete(userDetails.userId, setId)
+        return ResponseEntity.ok().body(ApiUtils.success())
+    }
 }
