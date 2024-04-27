@@ -22,7 +22,7 @@ class RecordService(
     private val sportRepository: SportRepository
 ) {
     @Transactional
-    fun create(userId:Long, sessionId: Long, requestDto: RecordRequest.CreateDto):CreateResponseDto {
+    fun create(userId: Long, sessionId: Long, requestDto: RecordRequest.CreateDto): CreateResponseDto {
         val workoutSession = sessionRepository.findByIdOrNull(sessionId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
         val sport = sportRepository.findByIdOrNull(requestDto.sportId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
         if (workoutSession.user.id != userId || sport.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
@@ -30,5 +30,16 @@ class RecordService(
         val newRecord = Record(workoutSession, sport)
 
         return CreateResponseDto(recordRepository.save(newRecord).id ?: throw CustomException(ErrorCode.SERVER_ERROR))
+    }
+
+    @Transactional
+    fun update(userId: Long, recordId: Long, requestDto: RecordRequest.UpdateDto) {
+        requestDto.sportId?.let {
+            val workoutRecord = recordRepository.findByIdOrNullFetchSession(recordId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+            val sport = sportRepository.findByIdOrNull(it) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+            if (workoutRecord.session.user.id != userId || sport.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+            workoutRecord.sport = sport
+        }
     }
 }

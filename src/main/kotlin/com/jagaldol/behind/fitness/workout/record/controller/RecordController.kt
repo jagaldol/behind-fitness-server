@@ -22,4 +22,15 @@ class RecordController(
         @RequestBody @Valid requestDto: RecordRequest.CreateDto,
         errors: Errors,
     ) = ResponseEntity.ok().body(ApiUtils.success(recordService.create(userDetails.userId, sessionId, requestDto)))
+
+    @PutMapping("/records/{recordId}")
+    fun update(
+        @PathVariable recordId: Long,
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+        @RequestBody @Valid requestDto: RecordRequest.UpdateDto,
+        errors: Errors,
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        recordService.update(userDetails.userId, recordId, requestDto)
+        return ResponseEntity.ok().body(ApiUtils.success())
+    }
 }

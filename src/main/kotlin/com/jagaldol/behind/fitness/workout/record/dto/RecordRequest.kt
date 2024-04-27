@@ -9,4 +9,9 @@ class RecordRequest {
         @field:NotNull @field:Positive
         val sportId: Long?
     )
+
+    data class UpdateDto(
+        @field:Positive
+        val sportId: Long?
+    )
 }

@@ -16,7 +16,7 @@ class Record(
     val session: Session,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sport_id")
-    val sport: Sport,
+    var sport: Sport,
     @ColumnDefault("now()")
     val createdAt: LocalDateTime = LocalDateTime.now(),
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
