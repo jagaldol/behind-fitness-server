@@ -22,10 +22,7 @@ class SportService(
     fun create(userId: Long, requestDto: SportRequest.CreateDto): CreateResponseDto {
         sportRepository.findByName(requestDto.name!!)?.let { throw CustomException(ErrorCode.DUPLICATED_DATA) }
         val user = userRepository.findByIdOrNull(userId) ?: throw CustomException(ErrorCode.NOT_FOUND_USER)
-        return CreateResponseDto(
-            sportRepository.save(Sport(user, requestDto.name)).id
-                ?: throw CustomException(ErrorCode.SERVER_ERROR)
-        )
+        return CreateResponseDto(sportRepository.save(Sport(user, requestDto.name)).id!!)
     }
 
     fun get(userId: Long) = SportResponse.GetDto.of(sportRepository.findAllByUserId(userId))

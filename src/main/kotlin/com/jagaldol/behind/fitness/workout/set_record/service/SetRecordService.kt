@@ -28,7 +28,7 @@ class SetRecordService(
             countUnit = requestDto.countUnit
         )
 
-        return CreateResponseDto(setRecordRepository.save(newSetRecord).id ?: throw CustomException(ErrorCode.SERVER_ERROR))
+        return CreateResponseDto(setRecordRepository.save(newSetRecord).id!!)
     }
 
     @Transactional

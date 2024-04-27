@@ -32,7 +32,7 @@ class SessionService(
         val user = userRepository.findByIdOrNull(userId) ?: throw CustomException(ErrorCode.NOT_FOUND_USER)
         val workoutSession = Session(user, requestDto.date!!, requestDto.startTime, requestDto.endTime)
 
-        return CreateResponseDto(sessionRepository.save(workoutSession).id ?: throw CustomException(ErrorCode.SERVER_ERROR))
+        return CreateResponseDto(sessionRepository.save(workoutSession).id!!)
     }
 
     @Transactional

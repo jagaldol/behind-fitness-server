@@ -31,7 +31,7 @@ class RecordService(
 
         val newRecord = Record(workoutSession, sport)
 
-        return CreateResponseDto(recordRepository.save(newRecord).id ?: throw CustomException(ErrorCode.SERVER_ERROR))
+        return CreateResponseDto(recordRepository.save(newRecord).id!!)
     }
 
     @Transactional
