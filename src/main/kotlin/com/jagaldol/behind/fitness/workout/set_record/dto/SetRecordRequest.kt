@@ -12,4 +12,13 @@ class SetRecordRequest {
         @field:Size(max = 5, message = "최대 5자까지 입력 가능합니다.")
         val countUnit: String?
     )
+
+    data class UpdateDto(
+        @field:PositiveOrZero
+        val weight: Int?,
+        @field:PositiveOrZero
+        val count: Int?,
+        @field:Size(max = 5, message = "최대 5자까지 입력 가능합니다.")
+        val countUnit: String?
+    )
 }

@@ -30,4 +30,17 @@ class SetRecordService(
 
         return CreateResponseDto(setRecordRepository.save(newSetRecord).id ?: throw CustomException(ErrorCode.SERVER_ERROR))
     }
+
+    @Transactional
+    fun update(userId: Long, setId: Long, requestDto: SetRecordRequest.UpdateDto) {
+        val setRecord = setRecordRepository.findByIdOrNullFetchSession(setId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+        if (setRecord.record.session.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+        with(requestDto) {
+
+            weight?.let { setRecord.weight = it }
+            count?.let { setRecord.count = it }
+            countUnit?.let { setRecord.countUnit = it }
+        }
+    }
 }
