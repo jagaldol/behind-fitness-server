@@ -9,6 +9,7 @@ import com.jagaldol.behind.fitness.workout.record.Record
 import com.jagaldol.behind.fitness.workout.record.dto.RecordRequest
 import com.jagaldol.behind.fitness.workout.record.repository.RecordRepository
 import com.jagaldol.behind.fitness.workout.session.repository.SessionRepository
+import com.jagaldol.behind.fitness.workout.set_record.repository.SetRecordRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,7 +20,8 @@ class RecordService(
     private val recordRepository: RecordRepository,
     private val userRepository: UserRepository,
     private val sessionRepository: SessionRepository,
-    private val sportRepository: SportRepository
+    private val sportRepository: SportRepository,
+    private val setRecordRepository: SetRecordRepository,
 ) {
     @Transactional
     fun create(userId: Long, sessionId: Long, requestDto: RecordRequest.CreateDto): CreateResponseDto {
@@ -41,5 +43,14 @@ class RecordService(
 
             workoutRecord.sport = sport
         }
+    }
+
+    @Transactional
+    fun delete(userId: Long, recordId: Long) {
+        val workoutRecord = recordRepository.findByIdOrNullFetchSession(recordId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+        if (workoutRecord.session.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+        setRecordRepository.deleteByRecordId(recordId)
+        recordRepository.delete(workoutRecord)
     }
 }

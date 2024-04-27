@@ -33,4 +33,13 @@ class RecordController(
         recordService.update(userDetails.userId, recordId, requestDto)
         return ResponseEntity.ok().body(ApiUtils.success())
     }
+
+    @DeleteMapping("/records/{recordId}")
+    fun delete(
+        @PathVariable recordId: Long,
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        recordService.delete(userDetails.userId, recordId)
+        return ResponseEntity.ok().body(ApiUtils.success())
+    }
 }
