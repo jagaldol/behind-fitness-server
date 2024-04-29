@@ -22,8 +22,8 @@ CREATE TABLE workout_session_tb
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id    BIGINT NOT NULL,
     date       DATE   NOT NULL,
-    start_time      TIME,
-    end_time        TIME,
+    start_time TIME,
+    end_time   TIME,
     created_at TIMESTAMP DEFAULT now()
 );
 
@@ -41,6 +41,6 @@ CREATE TABLE set_record_tb
     workout_record_id BIGINT NOT NULL,
     weight            INT        DEFAULT 0,
     count             INT        DEFAULT 0,
-    countUnit         VARCHAR(5) DEFAULT '회',
+    count_unit        VARCHAR(5) DEFAULT '회',
     created_at        TIMESTAMP  DEFAULT now()
 );
