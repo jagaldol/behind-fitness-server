@@ -8,6 +8,7 @@ import com.jagaldol.behind.fitness.sport.dto.SportRequest
 import com.jagaldol.behind.fitness.sport.dto.SportResponse
 import com.jagaldol.behind.fitness.sport.repository.SportRepository
 import com.jagaldol.behind.fitness.user.repository.UserRepository
+import com.jagaldol.behind.fitness.workout.record.repository.RecordRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class SportService(
     private val sportRepository: SportRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val recordRepository: RecordRepository,
 ) {
     @Transactional
     fun create(userId: Long, requestDto: SportRequest.CreateDto): CreateResponseDto {
@@ -39,6 +41,7 @@ class SportService(
     fun delete(sportId: Long, userId: Long) {
         val sport = sportRepository.findByIdOrNull(sportId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
         if (sport.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+        recordRepository.findTopBySportId(sportId)?.let { throw CustomException(ErrorCode.REFERENCED_DATA_EXISTS) }
 
         sportRepository.delete(sport)
     }

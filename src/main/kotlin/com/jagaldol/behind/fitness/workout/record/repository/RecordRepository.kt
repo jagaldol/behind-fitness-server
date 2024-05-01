@@ -9,4 +9,6 @@ interface RecordRepository : JpaRepository<Record, Long> {
 
     @Query("SELECT r FROM Record r JOIN FETCH r.session s WHERE r.id = :id")
     fun findByIdOrNullFetchSession(id: Long): Record?
+
+    fun findTopBySportId(sportId: Long): Record?
 }
