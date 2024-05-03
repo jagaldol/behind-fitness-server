@@ -94,4 +94,21 @@ class SessionService(
         }
         sessionRepository.delete(session)
     }
+
+    fun getDates(userId: Long, month: String?): SessionResponse.GetDatesDto {
+        val now = LocalDate.now()
+        var base = LocalDate.of(now.year, now.month, 1)
+
+        month?.let {
+            if (Regex("^\\d{4}-(0[1-9]|1[0-2])$").matches(it)) {
+                val (y, m) = it.split("-").map { value -> value.toInt() }
+                base = LocalDate.of(y, m, 1)
+            }
+        }
+
+        val startDate = base.minusMonths(1)
+        val endDate = base.plusMonths(2).minusDays(1)
+        val dateList = sessionRepository.findDistinctDateByUserIdAndDateBetween(userId, startDate, endDate)
+        return SessionResponse.GetDatesDto(dateList)
+    }
 }

@@ -121,4 +121,8 @@ class SessionResponse {
             }
         }
     }
+
+    data class GetDatesDto(
+        val dates: List<LocalDate>
+    )
 }

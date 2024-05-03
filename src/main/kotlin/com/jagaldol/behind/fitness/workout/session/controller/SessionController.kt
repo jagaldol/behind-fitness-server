@@ -55,4 +55,10 @@ class SessionController(
         sessionService.delete(sessionId, userDetails.userId)
         return ResponseEntity.ok().body(ApiUtils.success())
     }
+
+    @GetMapping("/dates")
+    fun getDates(
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+        @RequestParam(value = "month", required = false) month: String?
+    ) = ResponseEntity.ok().body(ApiUtils.success(sessionService.getDates(userDetails.userId, month)))
 }
