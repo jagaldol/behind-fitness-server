@@ -34,7 +34,10 @@ class SportService(
         val sport = sportRepository.findByIdOrNull(sportId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
         if (sport.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
 
-        requestDto.name?.let { sport.name = it }
+        requestDto.name?.let {
+            sportRepository.findByNameAndUserId(it, userId)?.let { throw CustomException(ErrorCode.DUPLICATED_DATA) }
+            sport.name = it
+        }
     }
 
     @Transactional
