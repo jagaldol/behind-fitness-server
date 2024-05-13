@@ -3,11 +3,11 @@ server:
     encoding:
       charset: utf-8
       force: true
-  port: 8082
+  port: 8080
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/fitness_db?rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://fitness-mysql:3306/fitness_db?rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
   jpa:
@@ -26,8 +26,8 @@ spring:
       encoding: utf-8
   data:
     redis:
-      host: localhost
-      port: 6380
+      host: fitness-redis
+      port: 6379
   jackson:
     time-zone: Asia/Seoul
   servlet:
