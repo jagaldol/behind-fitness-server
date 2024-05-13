@@ -20,4 +20,5 @@ jobs:
           script: |
             cd behind/behind-fitness-server/
             git pull
-            docker-compose up -d
+            docker compose pull spring_boot
+            docker compose up -d
