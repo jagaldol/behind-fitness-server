@@ -14,7 +14,7 @@ class SetRecord(
     @JoinColumn(name = "workout_record_id")
     val record: Record,
     @ColumnDefault("0")
-    var weight: Int? = 0,
+    var weight: Double? = .0,
     @ColumnDefault("0")
     var count: Int? = 0,
     @Column(length = 5) @ColumnDefault("'회'")

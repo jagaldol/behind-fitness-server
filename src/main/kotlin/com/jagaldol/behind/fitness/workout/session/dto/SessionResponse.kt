@@ -52,7 +52,7 @@ class SessionResponse {
 
                 data class GetSetDto(
                     val id: Long,
-                    val weight: Int,
+                    val weight: Double,
                     val count: Int,
                     val countUnit: String
                 ) {
@@ -107,7 +107,7 @@ class SessionResponse {
 
                 data class GetSetDto(
                     val id: Long,
-                    val weight: Int,
+                    val weight: Double,
                     val count: Int,
                     val countUnit: String
                 ) {

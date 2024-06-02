@@ -5,8 +5,7 @@ import jakarta.validation.constraints.Size
 
 class SetRecordRequest {
     data class CreateDto(
-        @field:PositiveOrZero
-        val weight: Int?,
+        val weight: Double?,
         @field:PositiveOrZero
         val count: Int?,
         @field:Size(min = 1, max = 5, message = "최대 5자까지 입력 가능합니다.")
@@ -14,8 +13,7 @@ class SetRecordRequest {
     )
 
     data class UpdateDto(
-        @field:PositiveOrZero
-        val weight: Int?,
+        val weight: Double?,
         @field:PositiveOrZero
         val count: Int?,
         @field:Size(min = 1, max = 5, message = "최대 5자까지 입력 가능합니다.")
