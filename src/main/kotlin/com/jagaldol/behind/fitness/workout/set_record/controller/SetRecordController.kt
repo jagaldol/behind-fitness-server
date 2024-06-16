@@ -7,11 +7,10 @@ import com.jagaldol.behind.fitness.workout.set_record.service.SetRecordService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.stereotype.Controller
 import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.*
 
-@Controller
+@RestController
 @RequestMapping("/sessions/records")
 class SetRecordController(
     private val setRecordService: SetRecordService
