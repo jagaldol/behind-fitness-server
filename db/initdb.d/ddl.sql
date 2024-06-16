@@ -39,8 +39,20 @@ CREATE TABLE set_record_tb
 (
     id                BIGINT AUTO_INCREMENT PRIMARY KEY,
     workout_record_id BIGINT NOT NULL,
-    weight            INT        DEFAULT 0,
+    weight            DOUBLE     DEFAULT 0,
     count             INT        DEFAULT 0,
     count_unit        VARCHAR(5) DEFAULT '회',
     created_at        TIMESTAMP  DEFAULT now()
+);
+
+CREATE TABLE inbody_tb
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id     BIGINT    NOT NULL,
+    date        DATE      NOT NULL,
+    weight      DOUBLE    NULL DEFAULT 0,
+    muscle      DOUBLE    NULL DEFAULT 0,
+    fat         DOUBLE    NULL DEFAULT 0,
+    percent_fat DOUBLE    NULL DEFAULT 0,
+    created_at  TIMESTAMP NULL DEFAULT now()
 );
