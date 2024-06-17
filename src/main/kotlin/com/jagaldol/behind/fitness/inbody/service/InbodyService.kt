@@ -27,4 +27,12 @@ class InbodyService(
 
         return CreateResponseDto(inbodyRepository.save(inbody).id!!)
     }
+
+    @Transactional
+    fun delete(inbodyId: Long, userId: Long) {
+        val inbody = inbodyRepository.findByIdOrNull(inbodyId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+        if (inbody.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+        inbodyRepository.delete(inbody)
+    }
 }

@@ -26,4 +26,13 @@ class InbodyController(
         @RequestBody @Valid requestDto: InbodyRequest.CreateDto,
         errors: Errors
     ) = ResponseEntity.ok().body(ApiUtils.success(inbodyService.create(userDetails.userId, requestDto)))
+
+    @DeleteMapping("/{inbodyId}")
+    fun delete(
+        @PathVariable inbodyId: Long,
+        @AuthenticationPrincipal userDetails: CustomUserDetails
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        inbodyService.delete(inbodyId, userDetails.userId)
+        return ResponseEntity.ok().body(ApiUtils.success())
+    }
 }
