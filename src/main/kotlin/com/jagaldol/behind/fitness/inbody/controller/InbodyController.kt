@@ -35,4 +35,15 @@ class InbodyController(
         inbodyService.delete(inbodyId, userDetails.userId)
         return ResponseEntity.ok().body(ApiUtils.success())
     }
+
+    @PutMapping("/{inbodyId}")
+    fun update(
+        @PathVariable inbodyId: Long,
+        @AuthenticationPrincipal userDetails: CustomUserDetails,
+        @RequestBody @Valid requestDto: InbodyRequest.UpdateDto,
+        errors: Errors
+    ): ResponseEntity<ApiUtils.Response<Any?>> {
+        inbodyService.update(inbodyId, userDetails.userId, requestDto)
+        return ResponseEntity.ok().body(ApiUtils.success())
+    }
 }

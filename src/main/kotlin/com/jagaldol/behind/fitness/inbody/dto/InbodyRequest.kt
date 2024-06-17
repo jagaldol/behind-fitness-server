@@ -12,4 +12,12 @@ class InbodyRequest {
         val fat: Double?,
         val percentFat: Double?
     )
+
+    data class UpdateDto(
+        val date: LocalDate?,
+        val weight: Double?,
+        val muscle: Double?,
+        val fat: Double?,
+        val percentFat: Double?
+    )
 }

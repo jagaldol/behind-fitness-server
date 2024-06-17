@@ -35,4 +35,18 @@ class InbodyService(
 
         inbodyRepository.delete(inbody)
     }
+
+    @Transactional
+    fun update(inbodyId: Long, userId: Long, requestDto: InbodyRequest.UpdateDto) {
+        val inbody = inbodyRepository.findByIdOrNull(inbodyId) ?: throw CustomException(ErrorCode.NOT_FOUND_DATA)
+        if (inbody.user.id != userId) throw CustomException(ErrorCode.PERMISSION_DENIED)
+
+        with(requestDto) {
+            date?.let { inbody.date = it }
+            weight?.let { inbody.weight = it }
+            muscle?.let { inbody.muscle = it }
+            fat?.let { inbody.fat = it }
+            percentFat?.let { inbody.percentFat = it }
+        }
+    }
 }
