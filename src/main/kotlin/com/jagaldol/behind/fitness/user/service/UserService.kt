@@ -83,6 +83,8 @@ class UserService(
             name?.let { user.name = it }
             password?.let { user.password = passwordEncoder.encode(it) }
             memo?.let { user.memo = it }
+            gender?.let { user.gender = it }
+            height?.let { user.height = it }
         }
     }
 }

@@ -17,6 +17,8 @@ class UserRequest {
         @field:Size(max = 100, message = "최대 100자까지 입력 가능합니다.")
         val memo: String?,
         @field:Size(min = 4, max = 64, message = "4 ~ 64자 이내로 입력해주세요.")
-        val password: String?
+        val password: String?,
+        val gender: Boolean?,
+        val height: Double?,
     )
 }

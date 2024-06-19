@@ -7,8 +7,10 @@ class UserResponse {
         val id: Long,
         val name: String,
         val email: String,
-        val memo: String?
+        val memo: String?,
+        val gender: Boolean,
+        val height: Double,
     ) {
-        constructor(user: User) : this(user.id!!, user.name, user.email, user.memo)
+        constructor(user: User) : this(user.id!!, user.name, user.email, user.memo, user.gender!!, user.height!!)
     }
 }
