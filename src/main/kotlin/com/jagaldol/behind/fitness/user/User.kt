@@ -18,8 +18,8 @@ class User(
     var password: String,
     @Column(length = 100)
     var memo: String,
-    @ColumnDefault("FALSE")
-    var gender: Boolean? = null,
+    @ColumnDefault("0")
+    var gender: Byte? = null,
     @ColumnDefault("170")
     var height: Double? = null,
     @ColumnDefault("now()")

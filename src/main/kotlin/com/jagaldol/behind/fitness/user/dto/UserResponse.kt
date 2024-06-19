@@ -8,7 +8,7 @@ class UserResponse {
         val name: String,
         val email: String,
         val memo: String?,
-        val gender: Boolean,
+        val gender: Byte,
         val height: Double,
     ) {
         constructor(user: User) : this(user.id!!, user.name, user.email, user.memo, user.gender!!, user.height!!)
