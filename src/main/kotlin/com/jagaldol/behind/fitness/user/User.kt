@@ -18,6 +18,10 @@ class User(
     var password: String,
     @Column(length = 100)
     var memo: String,
+    @ColumnDefault("FALSE")
+    var gender: Boolean? = null,
+    @ColumnDefault("170")
+    var height: Double? = null,
     @ColumnDefault("now()")
     val createdAt: LocalDateTime = LocalDateTime.now(),
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

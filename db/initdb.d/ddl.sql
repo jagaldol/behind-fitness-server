@@ -5,6 +5,8 @@ CREATE TABLE user_tb
     email      VARCHAR(100) NOT NULL UNIQUE,
     password   VARCHAR(100) NOT NULL,
     memo       VARCHAR(100),
+    gender     BOOLEAN   DEFAULT FALSE,
+    height     DOUBLE    DEFAULT 170,
     created_at TIMESTAMP DEFAULT now()
 );
 
