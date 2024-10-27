@@ -9,7 +9,7 @@ services:
       - mysql
       - redis
     environment:
-      - TZ=Asia/Seoul
+      TZ: "Asia/Seoul"
     env_file:
       - .env
   mysql:
